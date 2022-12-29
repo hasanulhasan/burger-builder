@@ -1,10 +1,10 @@
 import React from 'react';
-import { Card, CardBody, CardFooter, CardHeader } from 'reactstrap';
+import { Button, Card, CardBody, CardFooter, CardHeader } from 'reactstrap';
 
 const controls = [
-  { label: 'Salad', type: 'bread-salad' },
-  { label: 'Cheese', type: 'bread-cheese' },
-  { label: 'Meat', type: 'bread-meat' },
+  { label: 'Salad', type: 'salad' },
+  { label: 'Cheese', type: 'cheese' },
+  { label: 'Meat', type: 'meat' },
 ]
 
 const BuildControl = props => {
@@ -36,10 +36,14 @@ const Controls = (props) => {
           }
 
         </CardBody>
-        <CardFooter><h5>Price: BDT</h5></CardFooter>
+        <CardFooter><h5>Price:<strong>{props.price}</strong> BDT</h5></CardFooter>
+        <Button
+          onClick={props.toggleModal}
+          disabled={!props.purchasable}
+        >Order Now</Button>
       </Card>
 
-    </div>
+    </div >
   );
 };
 

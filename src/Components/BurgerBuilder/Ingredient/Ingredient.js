@@ -16,13 +16,13 @@ const Ingredient = (props) => {
     case 'bread-top':
       ingredient = <div><img src={BreadTop} alt="BreadTop" /> </div>;
       break;
-    case 'bread-meat':
+    case 'meat':
       ingredient = <div><img src={Meat} alt="Meat" /> </div>;
       break;
-    case 'bread-salad':
+    case 'salad':
       ingredient = <div><img src={Salad} alt="Salad" /> </div>;
       break;
-    case 'bread-cheese':
+    case 'cheese':
       ingredient = <div><img src={Cheese} alt="Cheese" /> </div>;
       break;
 
