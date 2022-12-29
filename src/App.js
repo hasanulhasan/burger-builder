@@ -3,8 +3,7 @@ import Main from './Components/Main';
 
 function App() {
   return (
-    <div className="App">
-      <p>Burger Builder Project</p>
+    <div className="container">
       <Main></Main>
     </div>
   );
