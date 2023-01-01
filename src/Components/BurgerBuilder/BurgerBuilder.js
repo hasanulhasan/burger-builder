@@ -3,60 +3,39 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import Controls from '../Controls/Controls';
 import Burger from './Burger/Burger';
 import Summary from './Summary/Summary';
-import { useHistory } from "react-router";
-import { unstable_HistoryRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { addIngredient, removeIngredient, updatePurchasable } from '../../redux/actionCreators';
 
-const INGREDIENT_PRICE = {
-  salad: 20,
-  cheese: 40,
-  meat: 90
+const mapStateToProps = state => {
+  return {
+    ingredients: state.ingredients,
+    totalPrice: state.totalPrice,
+    purchasable: state.purchasable
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addIngredient: (igtype) => dispatch(addIngredient(igtype)),
+    removeIngredient: (igtype) => dispatch(removeIngredient(igtype)),
+    updatePurchasable: () => dispatch(updatePurchasable())
+  }
 }
 
 class BurgerBuilder extends Component {
   state = {
-    ingredients: [
-      { type: 'salad', amount: 1 },
-      { type: 'cheese', amount: 2 },
-      { type: 'meat', amount: 3 }
-    ],
-    totalPrice: 80,
     modalOpen: false,
-    purchasable: false
-  }
-
-  updatePurchasable = ingredients => {
-    const sum = ingredients.reduce((sum, element) => {
-      return sum += element.amount
-    }, 0);
-    this.setState({ purchasable: sum > 0 })
-
   }
 
   addIngredient = type => {
-    const ingredients = [...this.state.ingredients];
-    const newPrice = this.state.totalPrice + INGREDIENT_PRICE[type];
-    for (let item of ingredients) {
-      if (item.type === type) {
-        item.amount++
-      }
-    }
-    this.setState({ ingredients: ingredients, totalPrice: newPrice })
-    this.updatePurchasable(ingredients)
+    this.props.addIngredient(type);
+    this.props.updatePurchasable();
   }
 
   removeIngredient = type => {
-    const ingredients = [...this.state.ingredients];
-    const newPrice = this.state.totalPrice - INGREDIENT_PRICE[type];
-    for (let item of ingredients) {
-      if (item.type === type) {
-        if (item.amount <= 0) {
-          return
-        }
-        item.amount--
-      }
-    }
-    this.setState({ ingredients: ingredients, totalPrice: newPrice })
-    this.updatePurchasable(ingredients)
+    this.props.removeIngredient(type);
+    this.props.updatePurchasable();
   }
 
   toggleMOdal = () => {
@@ -79,23 +58,24 @@ class BurgerBuilder extends Component {
     return (
       <div>
         <div className='d-flex flex-md-row flex-column'>
-          <Burger ingredients={this.state.ingredients}></Burger>
+          <Burger ingredients={this.props.ingredients}></Burger>
           <Controls
             ingredientAdded={this.addIngredient}
             ingredientRemove={this.removeIngredient}
-            price={this.state.totalPrice}
+            price={this.props.totalPrice}
             toggleModal={this.toggleMOdal}
-            purchasable={this.state.purchasable}
+            purchasable={this.props.purchasable}
           ></Controls>
         </div>
         <Modal isOpen={this.state.modalOpen}>
           <ModalHeader>Your Order Summary</ModalHeader>
           <ModalBody>
-            <h5>Total Price: {this.state.totalPrice.toFixed(0)}BDT</h5>
-            <Summary ingredients={this.state.ingredients}></Summary>
+            <h5>Total Price: {this.props.totalPrice.toFixed(0)}BDT</h5>
+            <Summary ingredients={this.props.ingredients}></Summary>
           </ModalBody>
           <ModalFooter>
-            <Button color='success' onClick={this.handleCheckOut}>Continue to CheckOut</Button>
+            <Link to='/checkout'><Button color='success' onClick={this.handleCheckOut}>Continue to CheckOut</Button></Link>
+
             <Button color='secondary' onClick={this.toggleMOdal}>Cancel</Button>
           </ModalFooter>
         </Modal>
@@ -104,4 +84,4 @@ class BurgerBuilder extends Component {
   }
 };
 
-export default BurgerBuilder;
+export default connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder);
