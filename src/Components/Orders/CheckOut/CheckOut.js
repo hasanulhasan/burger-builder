@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'reactstrap';
+import { Button, Modal, ModalBody } from 'reactstrap';
+import Spinner from '../Spinner/Spinner';
 
 const mapStateToProps = (state) => {
   return {
@@ -17,11 +18,14 @@ class CheckOut extends Component {
       deliveryAddress: '',
       phone: '',
       paymentTypes: 'Cash On Delivery'
-    }
+    },
+    isLoading: false,
+    isModalOpen: false,
+    modalMessage: ''
   }
 
   goBack = () => {
-    console.log('go back');
+    console.log('go back is under construction');
   }
 
   inputChangeHandler = (e) => {
@@ -33,6 +37,7 @@ class CheckOut extends Component {
     })
   }
   submitHandler = () => {
+    this.setState({ isLoading: true })
     const order = {
       ingredients: this.props.ingredients,
       customer: this.props.values,
@@ -41,14 +46,38 @@ class CheckOut extends Component {
     }
     console.log(order)
     axios.post('https://burger-builder-ac859-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json', order)
-      .then(res => console.log(res))
-      .then(err => console.log(err))
+      .then(res => {
+        if (res.status === 200) {
+          this.setState({
+            isLoading: false,
+            isModalOpen: true,
+            modalMessage: 'Order Successful'
+          })
+        }
+        else {
+          this.setState({
+            isLoading: false,
+            isModalOpen: true,
+            modalMessage: 'Something went wrong'
+          })
+        }
+      })
+      .catch(err => {
+        this.setState({
+          isLoading: false,
+          isModalOpen: true,
+          modalMessage: 'Error occurred'
+        })
+      })
 
   }
 
   render() {
     return (
       <div>
+        <div>
+          {this.state.isLoading && <Spinner></Spinner>}
+        </div>
         <h4 style={{
           border: '1px solid grey',
           boxShadow: '1px 1px #888888',
@@ -61,18 +90,28 @@ class CheckOut extends Component {
           borderRadius: '5px',
           padding: '20px'
         }}>
-          <textarea name='deliveryAddress' value={this.state.values.deliveryAddress} className='form-control' placeholder='Your Address' onChange={(e) => this.inputChangeHandler(e)}></textarea><br />
-          <input name='phone' className='form-control' value={this.state.values.phone} placeholder='Your number' onChange={(e) => this.inputChangeHandler(e)}></input><br />
-          <select name='paymentTypes' className='form-control' value={this.state.values.paymentTypes} onChange={(e) => this.inputChangeHandler(e)}>
+          <textarea name='deliveryAddress' value={this.state.values.deliveryAddress} className='form-control' placeholder='Your Address' onChange={(e) => this.inputChangeHandler(e)} required></textarea><br />
+          <input name='phone' className='form-control' value={this.state.values.phone} placeholder='Your number' onChange={(e) => this.inputChangeHandler(e)} required></input><br />
+          <select name='paymentTypes' className='form-control' value={this.state.values.paymentTypes} onChange={(e) => this.inputChangeHandler(e)} required>
             <option value='Cash On Delivery'>Cash On Delivery</option>
             <option value='Bkash'>Bkash</option>
           </select><br />
           <Button
             style={{ backgroundColor: '#D70F64' }}
             onClick={this.submitHandler}
-            className='mr-auto'>Place Order</Button>
+            className='mr-auto' disabled={!this.props.purchasable}>Place Order</Button>
           <Button color='secondary' className='mx-2' onClick={this.goBack}>Cancel</Button>
         </form>
+        {this.state.isModalOpen &&
+          <div>
+            <Modal isOpen={this.state.isModalOpen} onClick={this.goBack}>
+              <ModalBody>
+                <p>{this.state.modalMessage}</p>
+                <button onClick={() => this.setState({ isModalOpen: false })}>Close</button>
+              </ModalBody>
+            </Modal>
+          </div>
+        }
       </div>
     );
   }
