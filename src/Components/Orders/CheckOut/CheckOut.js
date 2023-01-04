@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalBody } from 'reactstrap';
+import { resetIngredients } from '../../../redux/actionCreators';
 import Spinner from '../Spinner/Spinner';
 
 const mapStateToProps = (state) => {
@@ -9,6 +10,12 @@ const mapStateToProps = (state) => {
     ingredients: state.ingredients,
     totalPrice: state.totalPrice,
     purchasable: state.purchasable
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    resetIngredients: () => dispatch(resetIngredients)
   }
 }
 
@@ -53,6 +60,7 @@ class CheckOut extends Component {
             isModalOpen: true,
             modalMessage: 'Order Successful'
           })
+          this.props.resetIngredients();
         }
         else {
           this.setState({
@@ -117,4 +125,4 @@ class CheckOut extends Component {
   }
 };
 
-export default connect(mapStateToProps)(CheckOut);
+export default connect(mapStateToProps, mapDispatchToProps)(CheckOut);
