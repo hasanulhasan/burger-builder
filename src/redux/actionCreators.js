@@ -45,4 +45,5 @@ export const fetchOrders = () => dispatch => {
     .then(res => {
       dispatch(loadOrders(res.data))
     })
+    .catch(orderLoadFailed())
 }

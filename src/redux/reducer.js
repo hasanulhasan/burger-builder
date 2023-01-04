@@ -85,6 +85,13 @@ export const reducer = (state = INITIAL_STATE, action) => {
 
       }
       break;
+    case actionTypes.ORDER_LOAD_FAILED:
+      return {
+        ...state,
+        orderErr: true,
+        orderLoading: false
+      }
+      break;
 
     default:
       return state

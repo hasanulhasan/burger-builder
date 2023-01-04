@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchOrders } from '../../redux/actionCreators';
+import Order from './Order';
+import Spinner from './Spinner/Spinner';
 
 const mapStateToProps = state => {
   return {
@@ -21,12 +23,33 @@ class Orders extends Component {
     this.props.fetchOrders()
   }
   componentDidUpdate() {
-    console.log(this.props)
+    console.log(this.props.orders)
   }
   render() {
+    let orders = null;
+    if (!this.props.orderErr) {
+      if (this.props.orders.length === 0) {
+        orders = <p>You have no orders</p>
+      }
+      else {
+        orders = this.props.orders.map(order => {
+          return <Order order={order} key={order.id}></Order>
+        })
+      }
+    }
+    else {
+      orders = <p style={{
+        border: '1px solid grey',
+        boxShadow: '1px 1px #888888',
+        borderRadius: '5px',
+        padding: '5px',
+        marginRight: '10px'
+      }}>There is a loading problem.</p>
+    }
     return (
       <div>
-        <p>this is order</p>
+        {/* <Spinner></Spinner> */}
+        {this.props.orderLoading ? <Spinner></Spinner> : orders}
       </div>
     );
   }

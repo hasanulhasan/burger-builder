@@ -46,6 +46,7 @@ class CheckOut extends Component {
   submitHandler = () => {
     this.setState({ isLoading: true })
     const order = {
+      deliveryAddress: this.props.deliveryAddress,
       ingredients: this.props.ingredients,
       customer: this.props.values,
       price: this.props.totalPrice,
