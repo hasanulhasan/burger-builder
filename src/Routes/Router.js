@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import BurgerBuilder from "../Components/BurgerBuilder/BurgerBuilder";
 import Main from "../Components/Main";
+import CheckOut from "../Components/Orders/CheckOut/CheckOut";
 import Orders from "../Components/Orders/Orders";
 
 const router = createBrowserRouter([
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/checkout',
-        element: <Orders></Orders>
+        element: <CheckOut></CheckOut>
       }
     ]
   }

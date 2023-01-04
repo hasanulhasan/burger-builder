@@ -18,7 +18,6 @@ const Burger = (props) => {
     ingredientArr = <p>Please add some Ingredient</p>
   }
 
-
   return (
     <div className='Burger'>
       <Ingredient type='bread-top'></Ingredient>
