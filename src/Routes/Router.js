@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import Auth from "../Components/Auth/Auth";
 import BurgerBuilder from "../Components/BurgerBuilder/BurgerBuilder";
 import Main from "../Components/Main";
 import CheckOut from "../Components/Orders/CheckOut/CheckOut";
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: '/order',
         element: <Orders></Orders>
+      },
+      {
+        path: '/login',
+        element: <Auth></Auth>
       },
       {
         path: '/checkout',
